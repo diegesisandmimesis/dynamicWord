@@ -40,14 +40,29 @@ versionInfo:    GameID
 	}
 ;
 
-DefineDynamicWord(void, 'void', 'Void of Some Kind', 'Formless Void')
-	initialLongWord = 'void'
-	revealedLongWord = 'formless void'
+// Define a dynamic word.  The first are is the base we'll use for
+// our substitution funtions:  "void" will get us voidWord() and
+// voidLongWord().  The second arg ("void" in single quotes) is the
+// key we test via gRevealed() to see if we use the initial or revealed
+// words we know.  The remaining args are, in order, the initial word
+// and the revealed word.  We could leave it at that, but we also include
+// additional declarations for the "long" word substitutions.
+DefineDynamicWord(void, 'void', 'void', 'formless void')
+	initWordAsTitle = 'Void of Some Kind'
+	wordAsTitle = 'Formless Void'
 ;
 
-startRoom:      Room '<<voidWord()>>'
-        "This is a <<voidLongWord()>>.  There's a plaque on the wall. "
+// And here we use the dynamic word we defined above.  voidWord()
+// will return "Void of Some Kind" or "Formless Void" based on whether
+// or not gRevealed('void') returns true or not.
+startRoom:      Room '<<voidWordAsTitle()>>'
+	// The description contains the "long" word, which will be
+	// "void" or "formless void" based on the same gRevealed() check.
+        "This is a <<voidWord()>>.  There's a plaque on the wall.
+	This is a <<dWord('void')>> called <q><<dWord('void', dTitle)>></q>. 
+	"
 ;
+// Now we add a bit of scenery.  Looking reveals the 'void' key.
 +Fixture 'plaque/sign' 'plaque'
 	"The plaque identifies this room as the Featureless Void.
 	<.reveal void> "
