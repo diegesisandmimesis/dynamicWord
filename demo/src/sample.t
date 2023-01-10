@@ -40,14 +40,18 @@ versionInfo:    GameID
 	}
 ;
 
-startRoom:      Room 'Void'
-        "This is a featureless void."
+DefineDynamicWord(void, 'void', 'Void of Some Kind', 'Formless Void')
+	initialLongWord = 'void'
+	revealedLongWord = 'formless void'
 ;
 
-me:     Person
-        location = startRoom
+startRoom:      Room '<<voidWord()>>'
+        "This is a <<voidLongWord()>>.  There's a plaque on the wall. "
 ;
++Fixture 'plaque/sign' 'plaque'
+	"The plaque identifies this room as the Featureless Void.
+	<.reveal void> "
+;
++me: Person;
 
-gameMain:       GameMainDef
-        initialPlayerChar = me
-;
+gameMain: GameMainDef initialPlayerChar = me;

@@ -16,14 +16,18 @@ class DynamicWord: object
 	id = nil
 	initialWord = nil
 	revealedWord = nil
+	initialLongWord = nil
+	revealedLongWord = nil
 
-	construct(n, w0?, w1?, fn?) {
+	construct(n, w0?, w1?, l0?, l1?) {
 		id = n;
 		initialWord = (w0 ? w0 : nil);
 		revealedWord = (w1 ? w1 : nil);
+		initialLongWord = (l0 ? l0 : nil);
+		revealedLongWord = (l1 ? l1 : nil);
 	}
-
 	getWord() { return(gRevealed(id) ? revealedWord : initialWord); }
+	getLongWord() {
+		return(gRevealed(id) ? revealedLongWord : initialLongWord);
+	}
 ;
-
-DynamicWord template 'id' 'initialWord'? 'revealedWord'?;

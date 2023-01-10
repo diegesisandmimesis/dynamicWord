@@ -5,7 +5,9 @@
 // Uncomment to enable debugging options.
 //#define __DEBUG_DYNAMIC_WORD
 
+DynamicWord template 'id' 'initialWord'? 'revealedWord'?;
 
-#define DefineDynamicWord(fn, cls, name, init, reveal...) \
-	cls##DynamicWord: DynamicWord name init reveal; \
-	fn##() { return(cls##DynamicWord.getWord()); }
+#define DefineDynamicWord(id, name, init, reveal...) \
+	id##Word() { return(id##DynamicWord.getWord()); } \
+	id##LongWord() { return(id##DynamicWord.getLongWord()); } \
+	id##DynamicWord: DynamicWord name init reveal
