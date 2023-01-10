@@ -42,30 +42,29 @@ versionInfo:    GameID
 
 // Define a dynamic word.  The first are is the base we'll use for
 // our substitution funtions:  "void" will get us voidWord() and
-// voidLongWord().  The second arg ("void" in single quotes) is the
+// voidWordAsTitle().  The second arg ("voidFlag" in single quotes) is the
 // key we test via gRevealed() to see if we use the initial or revealed
 // words we know.  The remaining args are, in order, the initial word
 // and the revealed word.  We could leave it at that, but we also include
-// additional declarations for the "long" word substitutions.
-DefineDynamicWord(void, 'void', 'void', 'formless void')
+// additional declarations for the "title" word substitutions.
+DefineDynamicWord(void, 'voidFlag', 'unknown void', 'formless void')
 	initWordAsTitle = 'Void of Some Kind'
 	wordAsTitle = 'Formless Void'
 ;
 
-// And here we use the dynamic word we defined above.  voidWord()
+// And here we use the dynamic word we defined above.  voidWordAsTitle()
 // will return "Void of Some Kind" or "Formless Void" based on whether
-// or not gRevealed('void') returns true or not.
+// or not gRevealed('voidFlag') returns true or not.
 startRoom:      Room '<<voidWordAsTitle()>>'
-	// The description contains the "long" word, which will be
-	// "void" or "formless void" based on the same gRevealed() check.
-        "This is a <<voidWord()>>.  There's a plaque on the wall.
-	This is a <<dWord('void')>> called <q><<dWord('void', dTitle)>></q>. 
-	"
+	// The description contains the "normal" word, which will be
+	// "unknown void" or "formless void" based on the same gRevealed()
+	// check described above.
+        "This is a <<voidWord()>>.  There's a plaque on the wall. "
 ;
-// Now we add a bit of scenery.  Looking reveals the 'void' key.
+// Now we add a bit of scenery.  Looking reveals 'voidFlag'.
 +Fixture 'plaque/sign' 'plaque'
-	"The plaque identifies this room as the Featureless Void.
-	<.reveal void> "
+	"The plaque identifies this room as the Formless Void.
+	<.reveal voidFlag> "
 ;
 +me: Person;
 
