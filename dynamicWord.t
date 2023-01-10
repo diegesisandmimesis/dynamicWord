@@ -86,7 +86,13 @@ class DynamicWord: object
 	initWord = nil		// "unrevealed" basic form of the word
 	initWordAsTitle = nil	// "unrevealed" word formatted as a title
 
-	construct(n, w0?, w1?, l0?, l1?) {
+	// If skipSmallWords is true, titleCase() will ignore the words
+	// defined in smallWords.  Only applies if no explicit
+	// wordAsTitle or initWordAsTitle are defined.
+	skipSmallWords = nil
+	smallWords = static [ 'a', 'an', 'of', 'the', 'to' ]
+
+	construct(n, w0, w1, l0?, l1?) {
 		id = n;
 		initWord = (w0 ? w0 : nil);
 		word = (w1 ? w1 : nil);
@@ -98,8 +104,35 @@ class DynamicWord: object
 	// something defined for word and initWord.
 	getWord() { return(gRevealed(id) ? word : initWord); }
 
+	// Rewrite the passed string as a title:  capitalizes the first
+	// letter of each word, optionally skipping a defined set of "small
+	// words" (the, of, and so on) that occur in the middle of the string.
+	// This is a *very* slight variation of sample code in the tads-gen
+	// documentation (from which we get rexReplace()).
+	titleCase(txt) {
+		return(rexReplace('%<(<alphanum>+)%>', txt, function(s, idx) {
+			// Skip capitalization if:  a)  the skipSmallWords
+			// flag is set, b)  we're not at the very start of
+			// the string, and c)  we're in the list of skippable
+			// words.
+			if((skipSmallWords == true) && (idx > 1) &&
+				smallWords.indexOf(s.toLower()) != nil)
+				return(s);
+
+			// Capitalize the first letter.
+			return(s.substr(1, 1).toTitleCase() + s.substr(2));
+		}, ReplaceAll));
+	}
+
 	// Return the word formatted for use as a title, e.g. in a room name.
 	getWordAsTitle() {
+		// If we haven't explicitly defined the "title" form(s)
+		// of the word, try capitalizing the basic forms.
+		if(wordAsTitle == nil)
+			wordAsTitle = titleCase(word);
+		if(initWordAsTitle == nil)
+			initWordAsTitle = titleCase(initWord);
+
 		return(gRevealed(id) ? wordAsTitle : initWordAsTitle);
 	}
 ;

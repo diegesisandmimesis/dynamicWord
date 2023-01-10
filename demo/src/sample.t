@@ -47,7 +47,7 @@ versionInfo:    GameID
 // words we know.  The remaining args are, in order, the initial word
 // and the revealed word.  We could leave it at that, but we also include
 // additional declarations for the "title" word substitutions.
-DefineDynamicWord(void, 'voidFlag', 'unknown void', 'formless void')
+DefineDynamicWord(void, 'voidFlag', 'unknown the void', 'formless void')
 	initWordAsTitle = 'Void of Some Kind'
 	wordAsTitle = 'Formless Void'
 ;
