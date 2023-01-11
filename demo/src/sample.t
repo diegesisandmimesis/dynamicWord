@@ -118,9 +118,9 @@ otherRoom: Room '<<otherWordAsTitle()>>'
 // methods that do whatever you want, they just have to return true if
 // the state is active.
 DefineStateWord(fsm, 'fsmID', 'mysterious room', [
-		'room with a foo' -> &checkFoo,
+		'room with a foo' -> &checkFoo,	
 		'room with a bar' -> 'rBar',
-		'room with a foo and bar' -> [ 'rFoo', 'rBar' ]
+		'room with a foo and bar' -> [ &checkFoo, 'rBar' ]
 	])
 	checkFoo() { return(gRevealed('rFoo')); }
 ;

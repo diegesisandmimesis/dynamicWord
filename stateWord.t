@@ -2,6 +2,25 @@
 //
 // stateWord.t
 //
+//	Extension to DynamicWord that uses a LookupTable to pick the
+//	output string.
+//
+//	Usage:
+//
+//	// Creating the StateWord
+//	// This will create a function barWord() that will return
+//	// 'bar plus one' if gRevealed('oneFlag') is true, 'bar plus two'
+//	// if gRevealed('twoFlag') is true, 'bar plus three' if both are
+//	// true, and 'unknown bar' if none of the conditions test true.
+//	// Note that the first case uses a method which happens to check
+//	// a gRevealed() value, but the method could do anything.
+//	DefineStateWord('bar', 'barID', 'unknown bar', [
+//		'bar plus one' -> &checkOne,
+//		'bar plus two' -> 'twoFlag',
+//		'bar plus three' -> [ &checkOne, 'twoFlag' ]
+//	])
+//	checkOne() { return(gRevealed('oneFlag')); }
+//
 #include <adv3.h>
 #include <en_us.h>
 
@@ -77,99 +96,33 @@ class StateWord: DynamicWord
 		}
 		return(nil);
 	}
+	// Get our current word.
+	// Note that we return the LAST MATCH.  We start out with the
+	// default value, and then walk through each of our tests, replacing
+	// the return value every time a test succeeds.
 	getWord() {
 		local r;
 
+		// Start out with the default "unrevealed" value.
 		r = word;
+
+		// Now walk through the state table, checking each value
+		// and replacing our return value if the test succeeds.
 		getStateTable().forEachAssoc(function(k, v) {
 			if(check(v)) r = k;
 		});
 
+		// If we've somehow or other lost our value (if one of the
+		// keys was nil, which shouldn't happen but we check anyway),
+		// reset the return value to the default string again.
 		if(r == nil)
 			return(word);
 
+		// Return the return value.
 		return(r);
 	}
+
+	// With StateWord, the "title" version of each word is just the basic
+	// version with the first letter of each word capitalized.
 	getWordAsTitle() { return(titleCase(getWord())); }
 ;
-
-/*
-// Class to hold all the stuff for a single dynamic word.
-class StateWord: DynamicWord
-	id = nil
-	wordList = nil
-	keyList = nil
-
-	getKeyList() {
-		local v;
-
-		if(keyList == nil)
-			keyList = new Vector();
-		if(dataType(keyList) != TypeList) {
-			v = keyList;
-			keyList = new Vector();
-			keyList += v;
-		}
-		return(keyList);
-	}
-	getWordList() {
-		local v;
-
-		if(wordList == nil)
-			wordList = new Vector();
-		if(dataType(wordList) != TypeList) {
-			v = wordList;
-			wordList = new Vector();
-			wordList += v;
-		}
-		return(wordList);
-	}
-	check() {
-		local fail, idx;
-
-		// Flag that gets set the first time we fail any check.
-		fail = nil;
-
-		// Index of the last check we passed before failing.
-		idx = 1;
-		getKeyList().forEach(function(o) {
-			if(fail) return;
-
-			switch(dataType(o)) {
-				case TypeSString:
-					if(!gRevealed(o)) fail = true;
-					break;
-				case TypeFuncPtr:
-					if(!(o)()) fail = true;
-					break;
-			}
-
-			if(fail != true) idx += 1;
-		});
-
-		return(idx);
-	}
-	getWord() {
-		local idx, l;
-
-		l = getWordList();
-		idx = check();
-		if(idx < 1) idx = 1;
-		if(idx > l.length()) idx = l.length();
-
-		return(l[idx]);
-	}
-	getWordAsTitle() { return(titleCase(getWord())); }
-	_debug() {
-		"StateWord <<id>> (<<toString(check())>>)\n ";
-		"\tKeys:\n ";
-		getKeyList().forEach(function(o) {
-			"\t\t<<o>>\n ";
-		});
-		"\tWords:\n ";
-		getWordList().forEach(function(o) {
-			"\t\t<<o>>\n ";
-		});
-	}
-;
-*/

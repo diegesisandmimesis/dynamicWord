@@ -86,6 +86,8 @@ class DynamicWord: object
 	initWord = nil		// "unrevealed" basic form of the word
 	initWordAsTitle = nil	// "unrevealed" word formatted as a title
 
+	lastWord = nil		// value as of the last check
+
 	// If skipSmallWords is true, titleCase() will ignore the words
 	// defined in smallWords.  Only applies if no explicit
 	// wordAsTitle or initWordAsTitle are defined.
@@ -103,9 +105,32 @@ class DynamicWord: object
 	// Returns true if the defined ID has been revealed, nil otherwise.
 	check() { return(gRevealed(id)); }
 
+	// Returns boolean true if the passed value is the last value
+	// the word evaluated to, nil otherwise.
+	// Defaults to current value of getWord() if argument is nil.
+	changed(v?) {
+		if(v == nil)
+			v = getWord();
+		return(v != lastWord);
+	}
+
+	// Notify subscribers of word changes.
+	notifyChanged() {}
+
+	// Set the value of lastWord, notifying subscribers if the value
+	// has changed.
+	// Returns the new value.
+	setLastWord(v) {
+		if(changed(v)) {
+			lastWord = v;
+			notifyChanged();
+		}
+		return(v);
+	}
+
 	// Return the basic form of the word.  Every instance has to have
 	// something defined for word and initWord.
-	getWord() { return(check() ? word : initWord); }
+	getWord() { return(setLastWord(check() ? word : initWord)); }
 
 	// Rewrite the passed string as a title:  capitalizes the first
 	// letter of each word, optionally skipping a defined set of "small

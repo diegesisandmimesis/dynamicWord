@@ -2,12 +2,17 @@
 // dynamicWord.h
 //
 
+#include "eventHandler.h"
+#ifndef EVENT_HANDLER_VERSION
+#error "This module requires the eventHandler module."
+#error "https://github.com/diegesisandmimesis/eventHandler"
+#endif // EVENT_HANDLER_VERSION
+
 // Uncomment to enable debugging options.
 //#define __DEBUG_DYNAMIC_WORD
 
 // Template for the DynamicWord class.
 DynamicWord template 'id' 'initWord'? 'word'?;
-//StateWord template 'id' [wordList]? [keyList]?;
 StateWord template 'id' 'word'? [stateTable]?;
 
 // Convenience macro for defining a DynamicWord instance.
@@ -20,12 +25,6 @@ StateWord template 'id' 'word'? [stateTable]?;
 	id##WordAsTitle() { return(id##DynamicWord.getWordAsTitle()); } \
 	id##DynamicWord: DynamicWord name init reveal
 
-/*
-#define DefineStateWord(id, name, wordList, keyList...) \
-	id##Word() { return(id##DynamicWord.getWord()); } \
-	id##WordAsTitle() { return(id##DynamicWord.getWordAsTitle()); } \
-	id##DynamicWord: StateWord name wordList keyList
-*/
 #define DefineStateWord(id, name, word, stateTable...) \
 	id##Word() { return(id##DynamicWord.getWord()); } \
 	id##WordAsTitle() { return(id##DynamicWord.getWordAsTitle()); } \
