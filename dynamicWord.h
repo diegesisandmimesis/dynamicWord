@@ -2,14 +2,24 @@
 // dynamicWord.h
 //
 
+
+// Uncomment to enable debugging options.
+//#define __DEBUG_DYNAMIC_WORD
+
+// Uncomment to enable notifications.
+// Only needed if you want objects to be able to update their vocabularies
+// to reflect dynamic word changes.
+//#define DYNAMIC_WORD_EVENTS
+
+// If the above in uncommented, then we need to include the eventHandler
+// module to support the features.
+#ifdef DYNAMIC_WORD_EVENTS
 #include "eventHandler.h"
 #ifndef EVENT_HANDLER_VERSION
 #error "This module requires the eventHandler module."
 #error "https://github.com/diegesisandmimesis/eventHandler"
 #endif // EVENT_HANDLER_VERSION
-
-// Uncomment to enable debugging options.
-//#define __DEBUG_DYNAMIC_WORD
+#endif // DYNAMIC_WORD_EVENTS
 
 // Template for the DynamicWord class.
 DynamicWord template 'id' 'initWord'? 'word'?;
