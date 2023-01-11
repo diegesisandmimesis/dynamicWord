@@ -100,9 +100,12 @@ class DynamicWord: object
 		wordAsTitle = (l1 ? l1 : nil);
 	}
 
+	// Returns true if the defined ID has been revealed, nil otherwise.
+	check() { return(gRevealed(id)); }
+
 	// Return the basic form of the word.  Every instance has to have
 	// something defined for word and initWord.
-	getWord() { return(gRevealed(id) ? word : initWord); }
+	getWord() { return(check() ? word : initWord); }
 
 	// Rewrite the passed string as a title:  capitalizes the first
 	// letter of each word, optionally skipping a defined set of "small
@@ -133,6 +136,6 @@ class DynamicWord: object
 		if(initWordAsTitle == nil)
 			initWordAsTitle = titleCase(initWord);
 
-		return(gRevealed(id) ? wordAsTitle : initWordAsTitle);
+		return(check() ? wordAsTitle : initWordAsTitle);
 	}
 ;

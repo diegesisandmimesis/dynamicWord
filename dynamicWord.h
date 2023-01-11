@@ -7,6 +7,8 @@
 
 // Template for the DynamicWord class.
 DynamicWord template 'id' 'initWord'? 'word'?;
+//StateWord template 'id' [wordList]? [keyList]?;
+StateWord template 'id' 'word'? [stateTable]?;
 
 // Convenience macro for defining a DynamicWord instance.
 // Creates global functions to make referring to instance simpler:
@@ -17,6 +19,17 @@ DynamicWord template 'id' 'initWord'? 'word'?;
 	id##Word() { return(id##DynamicWord.getWord()); } \
 	id##WordAsTitle() { return(id##DynamicWord.getWordAsTitle()); } \
 	id##DynamicWord: DynamicWord name init reveal
+
+/*
+#define DefineStateWord(id, name, wordList, keyList...) \
+	id##Word() { return(id##DynamicWord.getWord()); } \
+	id##WordAsTitle() { return(id##DynamicWord.getWordAsTitle()); } \
+	id##DynamicWord: StateWord name wordList keyList
+*/
+#define DefineStateWord(id, name, word, stateTable...) \
+	id##Word() { return(id##DynamicWord.getWord()); } \
+	id##WordAsTitle() { return(id##DynamicWord.getWordAsTitle()); } \
+	id##DynamicWord: StateWord name word stateTable
 
 // Convenience macros for accessing the dynamic words by their keys.
 #define dWord(key, args...) dynamicWords.getWord(key, args)
