@@ -72,7 +72,8 @@ DefineStateWord(cave, 'cave', 'mysterious cave', [
 
 // We have to use caveWordAsTitle() in the roomName because (afaik) there
 // isn't any way to convert a message param substitution into title case.
-startRoom:      Room 'Entrance to <<caveWordAsTitle()>>'
+//startRoom:      Room 'Entrance to <<caveWordAsTitle()>>'
+startRoom:      Room 'Entrance to {a caveTitle/him}'
         "This is the entrance to {a cave/him}.  There's large steel door
 	on the north wall with a sign on it. "
 ;

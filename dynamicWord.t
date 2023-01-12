@@ -90,6 +90,15 @@ class DynamicWord: Thing
 
 	lastWord = nil		// value as of the last check
 
+	// We use a special class to handle message param substitution for
+	// our word capitalized as a title.  The default will work if
+	// all of the title versions of the word are "regular"--they're
+	// derived straight from the object's name property.
+	// For special cases (where aName, theName, and so on need to be
+	// set individually) you'll have to create a special class to
+	// handle it for the individual DynamicWord.
+	dynamicWordTitleClass = DynamicWordTitle
+
 	// If skipSmallWords is true, titleCase() will ignore the words
 	// defined in smallWords.  Only applies if no explicit
 	// wordAsTitle or initWordAsTitle are defined.
@@ -111,6 +120,19 @@ class DynamicWord: Thing
 	initializeThing() {
 		inherited();
 		setGlobalParamName(id);
+		createTitleObj();
+	}
+
+	// Create the pseudo-Thing that will handle message param
+	// substitution for our stuff in title case.
+	createTitleObj() {
+		local obj;
+
+		// Create the instance.
+		obj = dynamicWordTitleClass.createInstance();
+
+		// Initialize it to refer to us.
+		obj.initializeFromWord(self);
 	}
 
 	// Returns true if the defined ID has been revealed, nil otherwise.
@@ -149,6 +171,7 @@ class DynamicWord: Thing
 	// This is a *very* slight variation of sample code in the tads-gen
 	// documentation (from which we get rexReplace()).
 	titleCase(txt) {
+		if(!txt) return('');
 		return(rexReplace('%<(<alphanum|squote>+)%>', txt,
 			function(s, idx) {
 				// Skip capitalization if:  a)  the
@@ -177,5 +200,32 @@ class DynamicWord: Thing
 			initWordAsTitle = titleCase(initWord);
 
 		return(check() ? wordAsTitle : initWordAsTitle);
+	}
+;
+
+// Kludge.
+// This only words if all the name properties (aName, theName...) are derived
+// normally from the name property itself.
+// If any funky stuff is going on in the name-related properties, you're
+// going to have to define dynamicWordTitleClass on the parent DynamicWord
+// and the enumerate everything in its own one-off class.
+// What we're doing:
+//	In the parent DynamicWord, if its ID is, for example, 'cave',
+//	then the message parameter substitution '{cave}' will automagically
+//	be created.  It will always use the "normal" version of the current
+//	word.  So "a dark cave" or whatever.
+//	A DynamicWordTitle is created for each DynamicWord, and it will
+//	define the message parameter substitution for the title case form
+//	of the word.  So '{caveTitle}', which would return "A Dark Cave".
+class DynamicWordTitle: Thing
+	parentWord = nil
+	name() { return(parentWord.getWordAsTitle()); }
+	isProperName() { return(parentWord.isProperName); }
+	initializeFromWord(obj) {
+		if((obj == nil) || !obj.ofKind(DynamicWord))
+			return(nil);
+		parentWord = obj;
+		setGlobalParamName(obj.id + 'title');
+		return(true);
 	}
 ;
