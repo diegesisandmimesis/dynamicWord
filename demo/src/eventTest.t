@@ -41,7 +41,7 @@ versionInfo:    GameID
 ;
 
 // State word for a simple mystery story:
-// The cave starts out as the "mysterious cave" when the player knowns
+// The cave starts out as the "mysterious cave" when the player knows
 // nothing about it.  The name is updated as the player discovers what
 // for want of a better word we'll call "clues".
 DefineStateWord(cave, 'cave', 'mysterious cave', [
@@ -71,7 +71,7 @@ DefineStateWord(cave, 'cave', 'mysterious cave', [
 ;
 
 // We have to use caveWordAsTitle() in the roomName because (afaik) there
-// isn't any way to covert a message param substitution into title case.
+// isn't any way to convert a message param substitution into title case.
 startRoom:      Room 'Entrance to <<caveWordAsTitle()>>'
         "This is the entrance to {a cave/him}.  There's large steel door
 	on the north wall with a sign on it. "
