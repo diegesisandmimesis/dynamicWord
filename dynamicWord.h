@@ -2,15 +2,26 @@
 // dynamicWord.h
 //
 
-
-// Uncomment to enable debugging options.
-//#define __DEBUG_DYNAMIC_WORD
-
+//
+// BEGIN EDITABLE OPTIONS
+//
+// The #define statements in this block of comments can be enabled or
+// disabled to suit your needs.
+//
 // Uncomment to enable notifications.
 // Only needed if you want objects to be able to update their vocabularies
 // to reflect dynamic word changes.
 //#define DYNAMIC_WORD_EVENTS
+//
+// Uncomment to enable debugging options.
+//#define __DEBUG_DYNAMIC_WORD
+//
+// END EDITABLE OPTIONS
+//
 
+//
+// NO EDITABLE OPTIONS BELOW THIS POINT
+//
 // If the above in uncommented, then we need to include the eventHandler
 // module to support the features.
 #ifdef DYNAMIC_WORD_EVENTS

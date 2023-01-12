@@ -116,7 +116,10 @@ class StateWord: DynamicWord
 		// keys was nil, which shouldn't happen but we check anyway),
 		// reset the return value to the default string again.
 		if(r == nil)
-			return(word);
+			r = word;
+
+		if(lastWord != r)
+			setLastWord(r);
 
 		// Return the return value.
 		return(r);

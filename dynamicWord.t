@@ -79,7 +79,7 @@ dynamicWords: PreinitObject
 ;
 
 // Class to hold all the stuff for a single dynamic word.
-class DynamicWord: object
+class DynamicWord: Thing
 	id = nil		// key to use for gRevealed()
 	word = nil		// "revealed" basic form of the word
 	wordAsTitle = nil	// "revealed" word formatted as a title
@@ -100,6 +100,15 @@ class DynamicWord: object
 		word = (w1 ? w1 : nil);
 		initWordAsTitle = (l0 ? l0 : nil);
 		wordAsTitle = (l1 ? l1 : nil);
+	}
+
+	// Make the name of our fake(-ish) Thing the same as whatever our
+	// current return value from getWord() is.
+	name() { return(getWord()); }
+
+	initializeThing() {
+		inherited();
+		setGlobalParamName(id);
 	}
 
 	// Returns true if the defined ID has been revealed, nil otherwise.
@@ -138,18 +147,22 @@ class DynamicWord: object
 	// This is a *very* slight variation of sample code in the tads-gen
 	// documentation (from which we get rexReplace()).
 	titleCase(txt) {
-		return(rexReplace('%<(<alphanum>+)%>', txt, function(s, idx) {
-			// Skip capitalization if:  a)  the skipSmallWords
-			// flag is set, b)  we're not at the very start of
-			// the string, and c)  we're in the list of skippable
-			// words.
-			if((skipSmallWords == true) && (idx > 1) &&
-				smallWords.indexOf(s.toLower()) != nil)
-				return(s);
+		return(rexReplace('%<(<alphanum|squote>+)%>', txt,
+			function(s, idx) {
+				// Skip capitalization if:  a)  the
+				// skipSmallWords flag is set, b)  we're not
+				// at the very start of the string, and
+				// c)  we're in the list of skippable
+				// words.
+				if((skipSmallWords == true) && (idx > 1) &&
+					smallWords.indexOf(s.toLower()) != nil)
+					return(s);
 
-			// Capitalize the first letter.
-			return(s.substr(1, 1).toTitleCase() + s.substr(2));
-		}, ReplaceAll));
+				// Capitalize the first letter.
+				return(s.substr(1, 1).toTitleCase()
+					+ s.substr(2));
+			}, ReplaceAll)
+		);
 	}
 
 	// Return the word formatted for use as a title, e.g. in a room name.
