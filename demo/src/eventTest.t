@@ -40,19 +40,27 @@ versionInfo:    GameID
 	}
 ;
 
+// State word for a simple mystery story:
+// The cave starts out as the "mysterious cave" when the player knowns
+// nothing about it.  The name is updated as the player discovers what
+// for want of a better word we'll call "clues".
 DefineStateWord(cave, 'cave', 'mysterious cave', [
 		'Bob\'s secret hideout' -> &checkBob,	
 		'the killer\'s hidden lair' -> &checkKiller,
 		'the killer\'s (Bob\'s) secret lair'
 			-> [ &checkBob, &checkKiller ]
 	])
+	// See if the player has learned that the cave is Bob's.
 	checkBob() {
 		if(gRevealed('bobFlag')) {
+			// We set isProperName so we can get "a mysterious cave"
+			// and "Bob's secret hideout" by using {a cave/him}.
 			isProperName = true;
 			return(true);
 		}
 		return(nil);
 	}
+	// See if the player has learned that the cave is the killer's.
 	checkKiller() {
 		if(gRevealed('killerFlag')) {
 			isProperName = true;
@@ -62,19 +70,19 @@ DefineStateWord(cave, 'cave', 'mysterious cave', [
 	}
 ;
 
-// And here we use the dynamic word we defined above.  voidWordAsTitle()
-// will return "Void of Some Kind" or "Formless Void" based on whether
-// or not gRevealed('voidFlag') returns true or not.
+// We have to use caveWordAsTitle() in the roomName because (afaik) there
+// isn't any way to covert a message param substitution into title case.
 startRoom:      Room 'Entrance to <<caveWordAsTitle()>>'
         "This is the entrance to {a cave/him}.  There's large steel door
 	on the north wall with a sign on it. "
 ;
-// Now we add a bit of scenery.  Looking reveals 'voidFlag'.
+// The sign that reveals that the cave is Bob's.
 +Fixture 'sign' 'sign'
 	"The sign says, <q>Bob's Secret Hideout</q>.
 	<.reveal bobFlag> "
 ;
 +me: Person;
+// The piece of evidence that reveals that the cave is the killer's.
 +knife: Thing 'bloody butcher knife' 'butcher knife'
 	"A butcher knife.  The blood on the blade indicates it is
 	the murder weapon.

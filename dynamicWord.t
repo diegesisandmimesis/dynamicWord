@@ -79,6 +79,8 @@ dynamicWords: PreinitObject
 ;
 
 // Class to hold all the stuff for a single dynamic word.
+// We're a Thing instead of an object just to take advantage of the
+// built-in naming widgetry (aName, theName, and so on) that gets us.
 class DynamicWord: Thing
 	id = nil		// key to use for gRevealed()
 	word = nil		// "revealed" basic form of the word
