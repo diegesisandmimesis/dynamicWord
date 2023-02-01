@@ -1,4 +1,0 @@
-name: dynamicWord Library
-source: dynamicWord.t
-source: stateWord.t
-source: dynamicWordMessageBuilder.t
